@@ -54,6 +54,7 @@ void init_opcode_check(sharedobj_t *obj)
 	instruction_t codes[] = {
 		{ "push", push },
 		{ "pall", pall },
+		{ "pint", pint },
 	};
 
 	len = sizeof(codes) / sizeof(codes[0]);
@@ -82,6 +83,7 @@ void init_opcode_check(sharedobj_t *obj)
  */
 void handle_opcode_proc(sharedobj_t *obj)
 {
+	/* PUSH ERROR HANDLING HERE */
 	if (strcmp(obj->words[0], "push") == 0)
 	{
 		if (obj->words[1])
@@ -89,6 +91,14 @@ void handle_opcode_proc(sharedobj_t *obj)
 		else
 		{
 			fprintf(stderr, "L%d: usage: push integer\n", obj->line_num);
+			get_out(obj);
+		}
+	} /* PINT ERROR HANDLING BELOW */
+	else if (strcmp(obj->words[0], "pint") == 0)
+	{
+		if (!*obj->current_stack)
+		{
+			fprintf(stderr, "L%d: can't pint, stack empty\n", obj->line_num);
 			get_out(obj);
 		}
 	}

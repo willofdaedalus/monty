@@ -33,6 +33,27 @@ void push(stack_t **stack, unsigned int line_number)
 }
 
 /**
+ * pint - opcode to print value at the top of the stack
+ * @stack: the current stack for monty
+ * @line_number: the current line number
+ */
+void pint(stack_t **stack, unsigned int line_number)
+{
+	/*
+	 * HEADS UP; there's a reason why this function is only two lines
+	 * and its because error handling and stack checking is not handled
+	 * in here
+	 * I know I know that's probably not for the best but
+	 * I decided to consolidate them all in one function called
+	 * handle_opcode_proc in the helpers.c file
+	 * if you need to do any error handling for the operations
+	 * check there!
+	 */
+	(void)line_number;
+	printf("%d\n", (*stack)->n);
+}
+
+/**
  * pall - opcode to print all elements on the stack
  * @stack: the current stack for monty
  * @line_number: the current line number

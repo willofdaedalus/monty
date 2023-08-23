@@ -38,7 +38,16 @@ typedef struct instruction_s
 } instruction_t;
 
 
-typedef struct
+/**
+ * struct sharedobj_s - a bunch of properties I found
+ * myself tossing in between functions so I figured I put them
+ * in one
+ * @words: the tokenised list of words on the current line
+ * @file: the current file we're reading from
+ * @line_num: the current line's number in the file
+ * @current_stack: a pointer to pointer of the current stack
+ */
+typedef struct sharedobj_s
 {
 	char *words[MAX_WORDS];
 	FILE *file;
@@ -49,6 +58,7 @@ typedef struct
 /* STACK OPERATIONS */
 void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack, unsigned int line_number);
+void pint(stack_t **stack, unsigned int line_number);
 void free_stack(stack_t *stack);
 
 
