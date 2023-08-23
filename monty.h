@@ -1,6 +1,7 @@
 #ifndef MONTY_H
 #define MONTY_H
 
+#define MAX_WORDS 64
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -31,5 +32,14 @@ typedef struct instruction_s
 	char *opcode;
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
+
+/* STACK OPERATIONS */
+void push(stack_t **stack, unsigned int line_number);
+void pall(stack_t **stack, unsigned int line_number);
+
+
+/* HELPER FUNCTIONS */
+void tokenize_line(char *line, char **words);
+void free_words(char **words);
 
 #endif /* MONTY_H */

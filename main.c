@@ -5,8 +5,11 @@
 int main(int argc, char **argv)
 {
 	FILE *file;
+	int i = 0;
 	char cur_line[100];
 	char *file_path = NULL;
+	char *words[MAX_WORDS];
+
 	if (argc != 2)
 	{
 		printf("USAGE: monty file\n");
@@ -14,7 +17,6 @@ int main(int argc, char **argv)
 	}
 
 	file_path = argv[1];
-
 	file = fopen(file_path, "r");
 	if (!file)
 	{
@@ -23,8 +25,18 @@ int main(int argc, char **argv)
 	}
 
 	while (fgets(cur_line, sizeof(cur_line), file))
-		printf("%s", cur_line);
+	{
+		tokenize_line(cur_line, words);
+
+		i = 0;
+		while (words[i])
+		{
+			printf("%d %s\n", i + 1, words[i]);
+			i++;
+		}
+	}
 
 	fclose(file);
+
 	return (0);
 }
