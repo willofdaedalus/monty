@@ -1,6 +1,7 @@
 #ifndef MONTY_H
 #define MONTY_H
 
+#include <stddef.h>
 #include <stdio.h>
 
 #define MAX_WORDS 64
@@ -59,14 +60,17 @@ typedef struct sharedobj_s
 void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack, unsigned int line_number);
 void pint(stack_t **stack, unsigned int line_number);
+void pop(stack_t **stack, unsigned int line_number);
+void add(stack_t **stack, unsigned int line_number);
+size_t stack_len(stack_t *stack);
 void free_stack(stack_t *stack);
 
 
 /* HELPER FUNCTIONS */
 void init_opcode_check(sharedobj_t *obj);
-void handle_opcode_proc(sharedobj_t *obj);
+void opcode_err_check(sharedobj_t *obj);
 void tokenize_line(char *line, char **words);
-void get_out(sharedobj_t *obj);
+void get_out(sharedobj_t *obj, char *message);
 void processing_core(sharedobj_t **obj, FILE *file, stack_t **head);
 
 #endif /* MONTY_H */

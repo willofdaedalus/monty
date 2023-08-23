@@ -55,6 +55,8 @@ void init_opcode_check(sharedobj_t *obj)
 		{ "push", push },
 		{ "pall", pall },
 		{ "pint", pint },
+		{ "pop", pop },
+		{ "add", add },
 	};
 
 	len = sizeof(codes) / sizeof(codes[0]);
@@ -62,9 +64,9 @@ void init_opcode_check(sharedobj_t *obj)
 	{
 		if (strcmp(obj->words[0], codes[i].opcode) == 0)
 		{
-			handle_opcode_proc(obj);
+			opcode_err_check(obj);
 			codes[i].f(obj->current_stack, obj->line_num);
-			return;
+			return; /* not break otherwise the unknown instruction line runs */
 		}
 
 		i++;
@@ -73,7 +75,10 @@ void init_opcode_check(sharedobj_t *obj)
 	{
 		fprintf(stderr, "L%d: unknown instruction %s\n",
 				obj->line_num, obj->words[0]);
-		get_out(obj);
+		free_stack(*(obj->current_stack));
+		fclose(obj->file); /* close the file upon encountering an error */
+		free(obj);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -81,7 +86,7 @@ void init_opcode_check(sharedobj_t *obj)
  * handle_opcode_proc - handles edge cases for values that need it like push
  * @obj: this struct contains common elements shared across many functions
  */
-void handle_opcode_proc(sharedobj_t *obj)
+void opcode_err_check(sharedobj_t *obj)
 {
 	/* PUSH ERROR HANDLING HERE */
 	if (strcmp(obj->words[0], "push") == 0)
@@ -89,18 +94,22 @@ void handle_opcode_proc(sharedobj_t *obj)
 		if (obj->words[1])
 			pushval = atoi(obj->words[1]);
 		else
-		{
-			fprintf(stderr, "L%d: usage: push integer\n", obj->line_num);
-			get_out(obj);
-		}
+			get_out(obj, "L%d: usage: push integer\n");
 	} /* PINT ERROR HANDLING BELOW */
 	else if (strcmp(obj->words[0], "pint") == 0)
 	{
 		if (!*obj->current_stack)
-		{
-			fprintf(stderr, "L%d: can't pint, stack empty\n", obj->line_num);
-			get_out(obj);
-		}
+			get_out(obj, "L%d: can't pint, stack empty\n");
+	}
+	else if (strcmp(obj->words[0], "pop") == 0)
+	{
+		if (!*obj->current_stack)
+			get_out(obj, "L%d: can't pop an empty stack\n");
+	}/* ADD ERROR HANDLING BELOW */
+	else if (strcmp(obj->words[0], "add") == 0)
+	{
+		if (stack_len(*obj->current_stack) < 2)
+			get_out(obj, "L%d: can't add, stack too short\n");
 	}
 }
 
@@ -109,8 +118,9 @@ void handle_opcode_proc(sharedobj_t *obj)
  * memory that has been allocated and printing an error message
  * @obj: the shared obj handling data that most variables need
  */
-void get_out(sharedobj_t *obj)
+void get_out(sharedobj_t *obj, char *message)
 {
+	fprintf(stderr, message, obj->line_num);
 	free_stack(*(obj->current_stack));
 	fclose(obj->file); /* close the file upon encountering an error */
 	free(obj);
