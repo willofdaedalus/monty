@@ -5,10 +5,11 @@
 int main(int argc, char **argv)
 {
 	FILE *file;
-	int i = 0;
+	int line_num = 1;
 	char cur_line[100];
 	char *file_path = NULL;
 	char *words[MAX_WORDS];
+	stack_t *head = NULL;
 
 	if (argc != 2)
 	{
@@ -28,12 +29,8 @@ int main(int argc, char **argv)
 	{
 		tokenize_line(cur_line, words);
 
-		i = 0;
-		while (words[i])
-		{
-			printf("%d %s\n", i + 1, words[i]);
-			i++;
-		}
+		init_opcode_check(&head, words, line_num, file);
+		line_num++;
 	}
 
 	fclose(file);

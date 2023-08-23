@@ -1,7 +1,10 @@
 #ifndef MONTY_H
 #define MONTY_H
 
+#include <stdio.h>
+
 #define MAX_WORDS 64
+
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -39,6 +42,7 @@ void pall(stack_t **stack, unsigned int line_number);
 
 
 /* HELPER FUNCTIONS */
+void init_opcode_check(stack_t **head, char **words, int line_num, FILE *file);
 void tokenize_line(char *line, char **words);
 void free_words(char **words);
 

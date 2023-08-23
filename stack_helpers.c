@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/**
+extern int pushval;
+
 void push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *head = *stack;
@@ -16,7 +17,7 @@ void push(stack_t **stack, unsigned int line_number)
 		exit(EXIT_FAILURE);
 	}
 
-	node->n = STACK_VALUE;
+	node->n = pushval;
 	node->next = head;
 	node->prev = NULL;
 
@@ -57,4 +58,3 @@ void free_stack(stack_t *stack)
 		stack = tmp;
 	}
 }
-*/
