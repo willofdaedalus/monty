@@ -6,13 +6,47 @@
 int pushval = 0;
 
 /**
- * init_opcode_check - checks the tokens against the allowed list of opcodes
- * @head: the head of the stack
- * @words: a tokenised list of words of the current line
- * @line_num: the current line number
- * @file: the FILE that is currently being read
+ * processing_core - processing each line of file
+ * @obj: the shared obj that sets everything off
+ * @file: the file to read; here so we can free in main
+ * @head: the new stack; here so we can free in main
  */
-void init_opcode_check(stack_t **head, char **words, int line_num, FILE *file)
+void processing_core(sharedobj_t **obj, FILE *file, stack_t *head)
+{
+	char cur_line[100];
+	int line_num = 1, i = 0;
+
+	while (fgets(cur_line, sizeof(cur_line), file))
+	{
+		tokenize_line(cur_line, (*obj)->words);
+
+		(*obj)->current_stack = &head;
+		(*obj)->file = file;
+		(*obj)->line_num = line_num;
+
+		if ((*obj)->words[i])
+		{
+			init_opcode_check(*obj);
+			line_num++;
+		}
+		else
+		{
+			/**
+			 * update the line number count in order to give
+			 * the right line number for the error!
+			 */
+			line_num++;
+			continue;
+		}
+		i = 0;
+	}
+}
+
+/**
+ * init_opcode_check - checks the tokens against the allowed list of opcodes
+ * @obj: this struct contains common elements shared across many functions
+ */
+void init_opcode_check(sharedobj_t *obj)
 {
 	int len = 0;
 	int i = 0;
@@ -22,14 +56,13 @@ void init_opcode_check(stack_t **head, char **words, int line_num, FILE *file)
 		{ "pall", pall },
 	};
 
-	(void)head;
 	len = sizeof(codes) / sizeof(codes[0]);
 	while (i < len)
 	{
-		if (strcmp(words[0], codes[i].opcode) == 0)
+		if (strcmp(obj->words[0], codes[i].opcode) == 0)
 		{
-			handle_opcode_proc(words, line_num, file, *head);
-			codes[i].f(head, line_num);
+			handle_opcode_proc(obj);
+			codes[i].f(obj->current_stack, obj->line_num);
 			return;
 		}
 
@@ -37,33 +70,41 @@ void init_opcode_check(stack_t **head, char **words, int line_num, FILE *file)
 	}
 	if (i >= len)
 	{
-		fprintf(stderr, "L%d: unknown instruction %s\n", line_num, words[0]);
-		fclose(file); /* close the file upon encountering an error */
-		exit(EXIT_FAILURE);
+		fprintf(stderr, "L%d: unknown instruction %s\n",
+				obj->line_num, obj->words[0]);
+		get_out(obj);
 	}
 }
 
 /**
  * handle_opcode_proc - handles edge cases for values that need it like push
- * @words: the tokenised list of words from the current line
- * @line_num: the current line number
- * @file: the current file open; useful for when a value fails so we free
- * @stack: the current stack
+ * @obj: this struct contains common elements shared across many functions
  */
-void handle_opcode_proc(char **words, int line_num, FILE *file, stack_t *stack)
+void handle_opcode_proc(sharedobj_t *obj)
 {
-	if (strcmp(words[0], "push") == 0)
+	if (strcmp(obj->words[0], "push") == 0)
 	{
-		if (words[1])
-			pushval = atoi(words[1]);
+		if (obj->words[1])
+			pushval = atoi(obj->words[1]);
 		else
 		{
-			fprintf(stderr, "L%d: usage: push integer\n", line_num);
-			free_stack(stack);
-			fclose(file); /* close the file upon encountering an error */
-			exit(EXIT_FAILURE);
+			fprintf(stderr, "L%d: usage: push integer\n", obj->line_num);
+			get_out(obj);
 		}
 	}
+}
+
+/**
+ * get_out - gracefully exits upon encountering an error by freeing
+ * memory that has been allocated and printing an error message
+ * @obj: the shared obj handling data that most variables need
+ */
+void get_out(sharedobj_t *obj)
+{
+	free_stack(*(obj->current_stack));
+	fclose(obj->file); /* close the file upon encountering an error */
+	free(obj);
+	exit(EXIT_FAILURE);
 }
 
 /**

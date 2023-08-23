@@ -11,12 +11,9 @@
 int main(int argc, char **argv)
 {
 	FILE *file;
-	int i = 0;
-	int line_num = 1;
-	char cur_line[100];
 	char *file_path = NULL;
-	char *words[MAX_WORDS];
 	stack_t *head = NULL;
+	sharedobj_t *obj = malloc(sizeof(sharedobj_t));
 
 	if (argc != 2)
 	{
@@ -29,33 +26,16 @@ int main(int argc, char **argv)
 	if (!file)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", file_path);
+		free(obj);
 		exit(EXIT_FAILURE);
 	}
 
-	while (fgets(cur_line, sizeof(cur_line), file))
-	{
-		tokenize_line(cur_line, words);
-
-		if (words[i])
-		{
-			init_opcode_check(&head, words, line_num, file);
-			line_num++;
-		}
-		else
-		{
-			/**
-			 * update the line number count in order to give
-			 * the right line number for the error!
-			 */
-			line_num++;
-			continue;
-		}
-
-		i = 0;
-	}
+	/* check here for main implementation details */
+	processing_core(&obj, file, head);
 
 	fclose(file);
 	free_stack(head);
+	free(obj);
 
 	return (0);
 }

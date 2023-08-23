@@ -37,6 +37,15 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
+
+typedef struct
+{
+	char *words[MAX_WORDS];
+	FILE *file;
+	unsigned int line_num;
+	stack_t **current_stack;
+} sharedobj_t;
+
 /* STACK OPERATIONS */
 void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack, unsigned int line_number);
@@ -44,8 +53,10 @@ void free_stack(stack_t *stack);
 
 
 /* HELPER FUNCTIONS */
-void init_opcode_check(stack_t **head, char **words, int line_num, FILE *file);
-void handle_opcode_proc(char **words, int line_num, FILE *file, stack_t *stack);
+void init_opcode_check(sharedobj_t *obj);
+void handle_opcode_proc(sharedobj_t *obj);
 void tokenize_line(char *line, char **words);
+void get_out(sharedobj_t *obj);
+void processing_core(sharedobj_t **obj, FILE *file, stack_t *head);
 
 #endif /* MONTY_H */
