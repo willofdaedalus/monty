@@ -57,6 +57,6 @@ void init_opcode_check(sharedobj_t *obj);
 void handle_opcode_proc(sharedobj_t *obj);
 void tokenize_line(char *line, char **words);
 void get_out(sharedobj_t *obj);
-void processing_core(sharedobj_t **obj, FILE *file, stack_t *head);
+void processing_core(sharedobj_t **obj, FILE *file, stack_t **head);
 
 #endif /* MONTY_H */

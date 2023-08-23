@@ -1,4 +1,5 @@
-tests/*
+tests/
+project_tests/
 monty
 vgcore*
 *.gch

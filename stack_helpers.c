@@ -70,4 +70,5 @@ void free_stack(stack_t *stack)
 		free(stack);
 		stack = tmp;
 	}
+	printf("done freeing values\n");
 }

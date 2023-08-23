@@ -11,7 +11,7 @@ int pushval = 0;
  * @file: the file to read; here so we can free in main
  * @head: the new stack; here so we can free in main
  */
-void processing_core(sharedobj_t **obj, FILE *file, stack_t *head)
+void processing_core(sharedobj_t **obj, FILE *file, stack_t **head)
 {
 	char cur_line[100];
 	int line_num = 1, i = 0;
@@ -20,7 +20,7 @@ void processing_core(sharedobj_t **obj, FILE *file, stack_t *head)
 	{
 		tokenize_line(cur_line, (*obj)->words);
 
-		(*obj)->current_stack = &head;
+		(*obj)->current_stack = head;
 		(*obj)->file = file;
 		(*obj)->line_num = line_num;
 

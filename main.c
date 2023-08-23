@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	}
 
 	/* check here for main implementation details */
-	processing_core(&obj, file, head);
+	processing_core(&obj, file, &head);
 
 	fclose(file);
 	free_stack(head);
