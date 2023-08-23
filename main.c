@@ -5,6 +5,7 @@
 int main(int argc, char **argv)
 {
 	FILE *file;
+	int i = 0;
 	int line_num = 1;
 	char cur_line[100];
 	char *file_path = NULL;
@@ -29,8 +30,15 @@ int main(int argc, char **argv)
 	{
 		tokenize_line(cur_line, words);
 
-		init_opcode_check(&head, words, line_num, file);
-		line_num++;
+		if (words[i])
+		{
+			init_opcode_check(&head, words, line_num, file);
+			line_num++;
+		}
+		else
+			continue;
+
+		i = 0;
 	}
 
 	fclose(file);

@@ -43,6 +43,7 @@ void pall(stack_t **stack, unsigned int line_number);
 
 /* HELPER FUNCTIONS */
 void init_opcode_check(stack_t **head, char **words, int line_num, FILE *file);
+void handle_opcode_proc(char **words);
 void tokenize_line(char *line, char **words);
 void free_words(char **words);
 

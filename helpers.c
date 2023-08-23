@@ -21,11 +21,7 @@ void init_opcode_check(stack_t **head, char **words, int line_num, FILE *file)
 	{
 		if (strcmp(words[0], codes[i].opcode) == 0)
 		{
-			if (strcmp(words[0], "push") == 0)
-			{
-				pushval = atoi(words[1]);
-			}
-
+			handle_opcode_proc(words);
 			codes[i].f(head, line_num);
 			return;
 		}
@@ -39,6 +35,15 @@ void init_opcode_check(stack_t **head, char **words, int line_num, FILE *file)
 		exit(EXIT_FAILURE);
 	}
 }
+
+void handle_opcode_proc(char **words)
+{
+	if (strcmp(words[0], "push") == 0)
+	{
+		pushval = atoi(words[1]);
+	}
+}
+
 
 void tokenize_line(char *line, char **words)
 {
