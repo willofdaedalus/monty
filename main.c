@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * main - entry point
+ * @argc: the arg count
+ * @argv: the args list
+ * Return: returns 0 for success
+ */
 int main(int argc, char **argv)
 {
 	FILE *file;
@@ -36,12 +42,20 @@ int main(int argc, char **argv)
 			line_num++;
 		}
 		else
+		{
+			/**
+			 * update the line number count in order to give
+			 * the right line number for the error!
+			 */
+			line_num++;
 			continue;
+		}
 
 		i = 0;
 	}
 
 	fclose(file);
+	free_stack(head);
 
 	return (0);
 }

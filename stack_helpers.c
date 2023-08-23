@@ -2,8 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern int pushval;
 
+/**
+ * push - opcode to push a value on to the stack
+ * @stack: the current stack for monty
+ * @line_number: the current line number
+ */
 void push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *head = *stack;
@@ -28,6 +32,11 @@ void push(stack_t **stack, unsigned int line_number)
 	*stack = head;
 }
 
+/**
+ * pall - opcode to print all elements on the stack
+ * @stack: the current stack for monty
+ * @line_number: the current line number
+ */
 void pall(stack_t **stack, unsigned int line_number)
 {
 	stack_t *head = NULL;
@@ -44,6 +53,10 @@ void pall(stack_t **stack, unsigned int line_number)
 	}
 }
 
+/**
+ * free_stack - frees memory for the stack
+ * @stack: the stack to free
+ */
 void free_stack(stack_t *stack)
 {
 	stack_t *tmp = NULL;

@@ -1,2 +1,4 @@
 tests/*
 monty
+vgcore*
+*.gch
