@@ -24,8 +24,7 @@ void processing_core(sharedobj_t **obj, FILE *file, stack_t **head)
 		(*obj)->file = file;
 		(*obj)->line_num = line_num;
 
-		/* checks for comments and skips the entire line */
-		if (strcmp((*obj)->words[i], "#") != 0)
+		if ((*obj)->words[i])
 		{
 			init_opcode_check(*obj);
 			line_num++;
@@ -56,7 +55,7 @@ void init_opcode_check(sharedobj_t *obj)
 		{ "push", push }, { "pall", pall }, { "pint", pint },
 		{ "pop", pop }, { "swap", swap }, { "add", add },
 		{ "nop", nop }, { "sub", sub }, { "div", divide },
-		{ "mul", mul }, { "mod", mod },
+		{ "mul", mul }, { "mod", mod }, { "#", nop },
 	};
 
 	len = sizeof(codes) / sizeof(codes[0]);
