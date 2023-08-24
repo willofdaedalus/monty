@@ -3,5 +3,5 @@ push 17
 # push 2
 push 0
 # do the mod function
-mod
-pall
+add
+#pall

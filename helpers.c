@@ -61,6 +61,9 @@ void init_opcode_check(sharedobj_t *obj)
 	len = sizeof(codes) / sizeof(codes[0]);
 	while (i < len)
 	{
+		if (obj->words[0][0] == '#')
+			return;
+
 		if (strcmp(obj->words[0], codes[i].opcode) == 0)
 		{
 			opcode_err_check(obj);
