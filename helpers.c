@@ -58,6 +58,7 @@ void init_opcode_check(sharedobj_t *obj)
 		{ "pop", pop },
 		{ "swap", swap },
 		{ "add", add },
+		{ "nop", nop },
 	};
 
 	len = sizeof(codes) / sizeof(codes[0]);

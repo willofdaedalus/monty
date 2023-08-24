@@ -2,9 +2,14 @@ push 7
 push 45
 push -45
 pall
+nop
 add 0
 pall
 pop
+nop
+nop
+nop
+nop
 pall
 add
 pall
