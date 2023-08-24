@@ -24,7 +24,8 @@ void processing_core(sharedobj_t **obj, FILE *file, stack_t **head)
 		(*obj)->file = file;
 		(*obj)->line_num = line_num;
 
-		if ((*obj)->words[i])
+		/* checks for comments and skips the entire line */
+		if (strcmp((*obj)->words[i], "#") != 0)
 		{
 			init_opcode_check(*obj);
 			line_num++;
@@ -55,6 +56,7 @@ void init_opcode_check(sharedobj_t *obj)
 		{ "push", push }, { "pall", pall }, { "pint", pint },
 		{ "pop", pop }, { "swap", swap }, { "add", add },
 		{ "nop", nop }, { "sub", sub }, { "div", divide },
+		{ "mul", mul }, { "mod", mod },
 	};
 
 	len = sizeof(codes) / sizeof(codes[0]);
@@ -100,4 +102,19 @@ void tokenize_line(char *line, char **words)
 		i++;
 	}
 	words[i] = NULL;
+}
+
+/**
+ * get_out - gracefully exits upon encountering an error by freeing
+ * memory that has been allocated and printing an error message
+ * @obj: the shared obj handling data that most variables need
+ * @message: the message to print
+ */
+void get_out(sharedobj_t *obj, const char *message)
+{
+	fprintf(stderr, message, obj->line_num);
+	free_stack(*(obj->current_stack));
+	fclose(obj->file); /* close the file upon encountering an error */
+	free(obj);
+	exit(EXIT_FAILURE);
 }

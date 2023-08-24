@@ -25,6 +25,8 @@ void opcode_err_check(sharedobj_t *obj)
 		{ "add", handle_short_stack, "L%d: can't add, stack too short\n" },
 		{ "sub", handle_short_stack, "L%d: can't sub, stack too short\n" },
 		{ "div", handle_div, "L%d: can't div, stack too short\n" },
+		{ "mod", handle_div, "L%d: can't mod, stack too short\n" },
+		{ "mul", handle_short_stack, "L%d: can't mul, stack too short\n" },
 	};
 
 	arrlen = sizeof(errors) / sizeof(errors[0]);
@@ -89,19 +91,4 @@ void handle_short_stack(sharedobj_t *obj, const char *err_msg)
 {
 	if (stack_len(*obj->current_stack) < 2)
 		get_out(obj, err_msg);
-}
-
-/**
- * get_out - gracefully exits upon encountering an error by freeing
- * memory that has been allocated and printing an error message
- * @obj: the shared obj handling data that most variables need
- * @message: the message to print
- */
-void get_out(sharedobj_t *obj, const char *message)
-{
-	fprintf(stderr, message, obj->line_num);
-	free_stack(*(obj->current_stack));
-	fclose(obj->file); /* close the file upon encountering an error */
-	free(obj);
-	exit(EXIT_FAILURE);
 }
