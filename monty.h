@@ -56,6 +56,14 @@ typedef struct sharedobj_s
 	stack_t **current_stack;
 } sharedobj_t;
 
+typedef struct error_map_s
+{
+	const char *opcode;
+	void (*f)(sharedobj_t *obj, const char *err_msg);
+	const char *err_msg;
+} error_map;
+
+
 /* STACK OPERATIONS */
 void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack, unsigned int line_number);
@@ -71,7 +79,12 @@ void free_stack(stack_t *stack);
 void init_opcode_check(sharedobj_t *obj);
 void opcode_err_check(sharedobj_t *obj);
 void tokenize_line(char *line, char **words);
-void get_out(sharedobj_t *obj, char *message);
+void get_out(sharedobj_t *obj, const char *message);
 void processing_core(sharedobj_t **obj, FILE *file, stack_t **head);
+
+/* HANDLER FUNCTIONS */
+void handle_push(sharedobj_t *obj, const char *err_msg);
+void handle_empty_stack(sharedobj_t *obj, const char *err_msg);
+void handle_short_stack(sharedobj_t *obj, const char *err_msg);
 
 #endif /* MONTY_H */

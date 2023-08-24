@@ -89,39 +89,70 @@ void init_opcode_check(sharedobj_t *obj)
  */
 void opcode_err_check(sharedobj_t *obj)
 {
-	/* PUSH ERROR HANDLING HERE */
-	if (strcmp(obj->words[0], "push") == 0)
+	int i = 0, arrlen = 0;
+
+	/** 
+	 * store an array of each opcode and its associated function
+	 * we then check the opcode from the textfile against our list
+	 * of known opcodes to find its function
+	 * there will always be a function because we handle unknow opcodes
+	 * in the init_opcode_chec function
+	 */
+	error_map errors[] = {
+		{ "push", handle_push, "L%d: usage: push integer\n" },
+		{ "pint", handle_empty_stack, "L%d: can't pint, stack empty\n" },
+		{ "pop", handle_empty_stack, "L%d: can't pop an empty stack\n" },
+		{ "swap", handle_short_stack, "L%d: can't swap, stack too short\n" },
+	};
+
+	arrlen = sizeof(errors) / sizeof(errors[0]);
+	while (i < arrlen)
 	{
-		if (obj->words[1])
-			pushval = atoi(obj->words[1]);
-		else
-			get_out(obj, "L%d: usage: push integer\n");
-	} /* PINT ERROR HANDLING BELOW */
-	else if (strcmp(obj->words[0], "pint") == 0)
-	{
-		if (!*obj->current_stack)
-			get_out(obj, "L%d: can't pint, stack empty\n");
-	}
-	else if (strcmp(obj->words[0], "pop") == 0)
-	{
-		if (!*obj->current_stack)
-			get_out(obj, "L%d: can't pop an empty stack\n");
-	}/* ADD ERROR HANDLING BELOW */
-	else if (strcmp(obj->words[0], "add") == 0)
-	{
-		if (stack_len(*obj->current_stack) < 2)
-			get_out(obj, "L%d: can't add, stack too short\n");
-	} /* SWAP ERROR HANDLING BELOW */
-	else if (strcmp(obj->words[0], "swap") == 0)
-	{
-		if (stack_len(*obj->current_stack) < 2)
-			get_out(obj, "L%d: can't swap, stack too short\n");
+		/* once opcode is found, execute the associated funtion */
+		if (strcmp(obj->words[0], errors[i].opcode) == 0)
+		{
+			errors[i].f(obj, errors[i].err_msg);
+			break;
+		}
+		i++;
 	}
 }
 
-void empty_stack_handler(sharedobj_t *obj, char *err_msg)
+/**
+ * handle_push - handles the push opcode; this is in a seperate function
+ * because of how niche it is and its edge cases
+ * @obj: the shared obj carrying all our properties
+ * @err_msg: error message to print when the value fails
+ */
+void handle_push(sharedobj_t *obj, const char *err_msg)
+{
+	if (obj->words[1])
+		pushval = atoi(obj->words[1]);
+	else
+		get_out(obj, err_msg);
+}
+
+/**
+ * handle_empty_stack - handles opcodes that complain when the stack is
+ * empty; useful for pint, pop etc
+ * @obj: shared obj sharing properties
+ * @err_msg: the error message to print
+ */
+void handle_empty_stack(sharedobj_t *obj, const char *err_msg)
 {
 	if (!*obj->current_stack)
+		get_out(obj, err_msg);
+}
+
+/**
+ * handle_short_stack - handles opcodes that complain when the stack is
+ * too short; useful for pint, pop etc
+ * @obj: shared obj sharing properties
+ * @err_msg: the error message to print
+ */
+void handle_short_stack(sharedobj_t *obj, const char *err_msg)
+{
+	if (stack_len(*obj->current_stack) < 2)
 		get_out(obj, err_msg);
 }
 
@@ -130,7 +161,7 @@ void empty_stack_handler(sharedobj_t *obj, char *err_msg)
  * memory that has been allocated and printing an error message
  * @obj: the shared obj handling data that most variables need
  */
-void get_out(sharedobj_t *obj, char *message)
+void get_out(sharedobj_t *obj, const char *message)
 {
 	fprintf(stderr, message, obj->line_num);
 	free_stack(*(obj->current_stack));
