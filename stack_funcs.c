@@ -7,7 +7,8 @@
 /**
  * push - opcode to push a value on to the stack
  * @stack: the current stack for monty
- * @line_number: the current line number
+ * @line_number: the current line number; not used but
+ * I need it for the function pointer...
  */
 void push(stack_t **stack, unsigned int line_number)
 {
@@ -36,7 +37,8 @@ void push(stack_t **stack, unsigned int line_number)
 /**
  * pint - opcode to print value at the top of the stack
  * @stack: the current stack for monty
- * @line_number: the current line number
+ * @line_number: the current line number; not used but
+ * I need it for the function pointer...
  */
 void pint(stack_t **stack, unsigned int line_number)
 {
@@ -57,7 +59,8 @@ void pint(stack_t **stack, unsigned int line_number)
 /**
  * pall - opcode to print all elements on the stack
  * @stack: the current stack for monty
- * @line_number: the current line number
+ * @line_number: the current line number; not used but
+ * I need it for the function pointer...
  */
 void pall(stack_t **stack, unsigned int line_number)
 {
@@ -83,7 +86,8 @@ void pall(stack_t **stack, unsigned int line_number)
 /**
  * pop - opcode to pop the top element from the stack
  * @stack: the current stack for monty
- * @line_number: the current line number
+ * @line_number: the current line number; not used but
+ * I need it for the function pointer...
  */
 void pop(stack_t **stack, unsigned int line_number)
 {
@@ -100,6 +104,12 @@ void pop(stack_t **stack, unsigned int line_number)
 	free(head);
 }
 
+/**
+ * add - opcode to add the top two elements
+ * @stack: the current stack for monty
+ * @line_number: the current line number; not used but
+ * I need it for the function pointer...
+ */
 void add(stack_t **stack, unsigned int line_number)
 {
 	(void)stack;

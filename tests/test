@@ -1,6 +1,4 @@
-push 12
-push 16
-									push 78
-									                     pop
-push 69
+push 1
+pall
+swap
 pall

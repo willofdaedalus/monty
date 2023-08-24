@@ -56,6 +56,7 @@ void init_opcode_check(sharedobj_t *obj)
 		{ "pall", pall },
 		{ "pint", pint },
 		{ "pop", pop },
+		{ "swap", swap },
 		{ "add", add },
 	};
 
@@ -110,7 +111,18 @@ void opcode_err_check(sharedobj_t *obj)
 	{
 		if (stack_len(*obj->current_stack) < 2)
 			get_out(obj, "L%d: can't add, stack too short\n");
+	} /* SWAP ERROR HANDLING BELOW */
+	else if (strcmp(obj->words[0], "swap") == 0)
+	{
+		if (stack_len(*obj->current_stack) < 2)
+			get_out(obj, "L%d: can't swap, stack too short\n");
 	}
+}
+
+void empty_stack_handler(sharedobj_t *obj, char *err_msg)
+{
+	if (!*obj->current_stack)
+		get_out(obj, err_msg);
 }
 
 /**
