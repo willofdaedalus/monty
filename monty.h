@@ -82,6 +82,8 @@ void pop(stack_t **stack, unsigned int line_number);
 void swap(stack_t **stack, unsigned int line_number);
 void add(stack_t **stack, unsigned int line_number);
 void nop(stack_t **stack, unsigned int line_number);
+void sub(stack_t **stack, unsigned int line_number);
+void divide(stack_t **stack, unsigned int line_number);
 size_t stack_len(stack_t *stack);
 void free_stack(stack_t *stack);
 
@@ -95,6 +97,7 @@ void processing_core(sharedobj_t **obj, FILE *file, stack_t **head);
 
 /* HANDLER FUNCTIONS */
 void handle_push(sharedobj_t *obj, const char *err_msg);
+void handle_div(sharedobj_t *obj, const char *err_msg);
 void handle_empty_stack(sharedobj_t *obj, const char *err_msg);
 void handle_short_stack(sharedobj_t *obj, const char *err_msg);
 

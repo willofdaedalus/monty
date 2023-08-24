@@ -52,13 +52,9 @@ void init_opcode_check(sharedobj_t *obj)
 	int i = 0;
 
 	instruction_t codes[] = {
-		{ "push", push },
-		{ "pall", pall },
-		{ "pint", pint },
-		{ "pop", pop },
-		{ "swap", swap },
-		{ "add", add },
-		{ "nop", nop },
+		{ "push", push }, { "pall", pall }, { "pint", pint },
+		{ "pop", pop }, { "swap", swap }, { "add", add },
+		{ "nop", nop }, { "sub", sub }, { "div", divide },
 	};
 
 	len = sizeof(codes) / sizeof(codes[0]);

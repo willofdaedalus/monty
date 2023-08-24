@@ -26,3 +26,34 @@ void nop(stack_t **stack, unsigned int line_number)
 	(void) stack;
 	(void) line_number;
 }
+
+/**
+ * sub - opcode to subtract first node from second
+ * @stack: the current stack
+ * @line_number: the line number
+ */
+void sub(stack_t **stack, unsigned int line_number)
+{
+	int result = 0;
+
+	(void)line_number;
+	result = (*stack)->next->n - (*stack)->n;
+	pop(stack, line_number);
+	(*stack)->n = result;
+}
+
+/**
+ * div - divides the second top element by the top element
+ * @stack: the current stack
+ * @line_number: the line number
+ */
+void divide(stack_t **stack, unsigned int line_number)
+{
+	int result = 0;
+
+	(void)line_number;
+	result = (*stack)->next->n / (*stack)->n;
+	pop(stack, line_number);
+	(*stack)->n = result;
+
+}

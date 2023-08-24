@@ -23,6 +23,8 @@ void opcode_err_check(sharedobj_t *obj)
 		{ "pop", handle_empty_stack, "L%d: can't pop an empty stack\n" },
 		{ "swap", handle_short_stack, "L%d: can't swap, stack too short\n" },
 		{ "add", handle_short_stack, "L%d: can't add, stack too short\n" },
+		{ "sub", handle_short_stack, "L%d: can't sub, stack too short\n" },
+		{ "div", handle_div, "L%d: can't div, stack too short\n" },
 	};
 
 	arrlen = sizeof(errors) / sizeof(errors[0]);
@@ -50,6 +52,19 @@ void handle_push(sharedobj_t *obj, const char *err_msg)
 		pushval = atoi(obj->words[1]);
 	else
 		get_out(obj, err_msg);
+}
+
+/**
+ * handle_div - handles the opcode for division
+ * @obj: the shared obj
+ * @err_msg: the standard error message
+ */
+void handle_div(sharedobj_t *obj, const char *err_msg)
+{
+	handle_short_stack(obj, err_msg);
+
+	if ((*obj->current_stack)->n == 0)
+		get_out(obj, "L%d: division by zero\n");
 }
 
 /**
