@@ -1,7 +1,14 @@
-# push 24
-push 17
-# push 2
+push 1
+push 2
+push 3
+push 4
 push 0
-# do the mod function
-add
-#pall
+push 110
+push 0 			STOP!
+push 108 		l
+push 111 		o
+push 111 		o
+push 104 		h
+push 99 		c
+push 83 		S
+pstr

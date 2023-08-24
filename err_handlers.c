@@ -26,6 +26,7 @@ void opcode_err_check(sharedobj_t *obj)
 		{ "sub", handle_short_stack, "L%d: can't sub, stack too short\n" },
 		{ "div", handle_div, "L%d: can't div, stack too short\n" },
 		{ "mod", handle_div, "L%d: can't mod, stack too short\n" },
+		{ "pchar", handle_pchar, "L%d: can't pchar, stack empty\n" },
 		{ "mul", handle_short_stack, "L%d: can't mul, stack too short\n" },
 	};
 
