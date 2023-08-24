@@ -56,6 +56,16 @@ typedef struct sharedobj_s
 	stack_t **current_stack;
 } sharedobj_t;
 
+/**
+ * struct error_map_s - this is the struct maps each opcode to
+ * a function and an error message
+ * @opcode: the opcode to check
+ * @f: a pointer to a function that checks if the opcode's conditions
+ * are met; if they are nothing happens, otherwise the error message
+ * is printed
+ * @err_msg: the message to print if the opcode's conditions are
+ * not met
+ */
 typedef struct error_map_s
 {
 	const char *opcode;

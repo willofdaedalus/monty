@@ -84,7 +84,7 @@ void pall(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * pop - opcode to pop the top element from the stack
+ * pop - opcode to remove the top element from the stack
  * @stack: the current stack for monty
  * @line_number: the current line number; not used but
  * I need it for the function pointer...
@@ -112,6 +112,10 @@ void pop(stack_t **stack, unsigned int line_number)
  */
 void add(stack_t **stack, unsigned int line_number)
 {
-	(void)stack;
+	int result = 0;
+
 	(void)line_number;
+	result = (*stack)->n + (*stack)->next->n;
+	pop(stack, line_number);
+	(*stack)->n = result;
 }

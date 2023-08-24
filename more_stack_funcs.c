@@ -1,8 +1,3 @@
-/**
- * This file exists because the style guide dictates there should be
- * a maximum of five functions per file
- */
-
 #include "monty.h"
 
 /**
