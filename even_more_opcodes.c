@@ -51,11 +51,10 @@ void pstr(stack_t **stack, unsigned int line_number)
 	while (head)
 	{
 		ch = head->n;
-		if (ch > 0 && ch < 128)
-			putchar(ch);
-		else
+		if (ch < 1 || ch > 127)
 			break;
 
+		putchar(ch);
 		head = head->next;
 	}
 	putchar('\n');
