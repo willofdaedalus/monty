@@ -1,4 +1,5 @@
 #include "monty.h"
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -19,6 +20,8 @@ void opcode_err_check(sharedobj_t *obj)
 	 */
 	error_map errors[] = {
 		{ "push", handle_push, "L%d: usage: push integer\n" },
+		{ "pchar", handle_pchar, "L%d: can't pchar, stack empty\n" },
+		{ "mul", handle_short_stack, "L%d: can't mul, stack too short\n" },
 		{ "pint", handle_empty_stack, "L%d: can't pint, stack empty\n" },
 		{ "pop", handle_empty_stack, "L%d: can't pop an empty stack\n" },
 		{ "swap", handle_short_stack, "L%d: can't swap, stack too short\n" },
@@ -26,8 +29,6 @@ void opcode_err_check(sharedobj_t *obj)
 		{ "sub", handle_short_stack, "L%d: can't sub, stack too short\n" },
 		{ "div", handle_div, "L%d: can't div, stack too short\n" },
 		{ "mod", handle_div, "L%d: can't mod, stack too short\n" },
-		{ "pchar", handle_pchar, "L%d: can't pchar, stack empty\n" },
-		{ "mul", handle_short_stack, "L%d: can't mul, stack too short\n" },
 	};
 
 	arrlen = sizeof(errors) / sizeof(errors[0]);
@@ -51,10 +52,25 @@ void opcode_err_check(sharedobj_t *obj)
  */
 void handle_push(sharedobj_t *obj, const char *err_msg)
 {
-	if (obj->words[1])
+	char *cur_word = obj->words[1];
+	int i = 0;
+
+	/**
+	 * check each individual byte before doing atoi
+	 * because atoi refuses to do error handling
+	 */
+	if (cur_word)
+	{
+		while (cur_word[i])
+		{
+			if (cur_word[i] != '-' && !isdigit(cur_word[i]))
+				clean_up(obj, err_msg);
+			i++;
+		}
 		pushval = atoi(obj->words[1]);
-	else
-		get_out(obj, err_msg);
+		return; /* early return so we don't trigger cleanup below */
+	}
+	clean_up(obj, err_msg);
 }
 
 /**
@@ -67,7 +83,7 @@ void handle_div(sharedobj_t *obj, const char *err_msg)
 	handle_short_stack(obj, err_msg);
 
 	if ((*obj->current_stack)->n == 0)
-		get_out(obj, "L%d: division by zero\n");
+		clean_up(obj, "L%d: division by zero\n");
 }
 
 /**
@@ -79,7 +95,7 @@ void handle_div(sharedobj_t *obj, const char *err_msg)
 void handle_empty_stack(sharedobj_t *obj, const char *err_msg)
 {
 	if (!*obj->current_stack)
-		get_out(obj, err_msg);
+		clean_up(obj, err_msg);
 }
 
 /**
@@ -91,5 +107,5 @@ void handle_empty_stack(sharedobj_t *obj, const char *err_msg)
 void handle_short_stack(sharedobj_t *obj, const char *err_msg)
 {
 	if (stack_len(*obj->current_stack) < 2)
-		get_out(obj, err_msg);
+		clean_up(obj, err_msg);
 }

@@ -20,6 +20,7 @@ void processing_core(sharedobj_t **obj, FILE *file, stack_t **head)
 	{
 		tokenize_line(cur_line, (*obj)->words);
 
+		/* hand over the necessary details to sharedobj */
 		(*obj)->current_stack = head;
 		(*obj)->file = file;
 		(*obj)->line_num = line_num;
@@ -51,6 +52,7 @@ void init_opcode_check(sharedobj_t *obj)
 	int len = 0;
 	int i = 0;
 
+	/* opcodes and their associated functions */
 	instruction_t codes[] = {
 		{ "push", push }, { "pall", pall }, { "pint", pint },
 		{ "pop", pop }, { "swap", swap }, { "add", add },
@@ -59,7 +61,7 @@ void init_opcode_check(sharedobj_t *obj)
 		{ "pchar", pchar }, { "pstr", pstr },
 	};
 
-	len = sizeof(codes) / sizeof(codes[0]);
+	len = sizeof(codes) / sizeof(codes[0]); /* compute size of array */
 	while (i < len)
 	{
 		if (obj->words[0][0] == '#')
@@ -74,15 +76,18 @@ void init_opcode_check(sharedobj_t *obj)
 
 		i++;
 	}
-	if (i >= len)
-	{
-		fprintf(stderr, "L%d: unknown instruction %s\n",
-				obj->line_num, obj->words[0]);
-		free_stack(*(obj->current_stack));
-		fclose(obj->file); /* close the file upon encountering an error */
-		free(obj);
-		exit(EXIT_FAILURE);
-	}
+
+	/* 
+	 * free the memory if the command is not found
+	 * we can't use clean_up because this needs the instruction
+	 * name in order to print
+	 */
+	fprintf(stderr, "L%d: unknown instruction %s\n",
+			obj->line_num, obj->words[0]);
+	free_stack(*(obj->current_stack));
+	fclose(obj->file); /* close the file upon encountering an error */
+	free(obj);
+	exit(EXIT_FAILURE);
 }
 
 
@@ -108,12 +113,12 @@ void tokenize_line(char *line, char **words)
 }
 
 /**
- * get_out - gracefully exits upon encountering an error by freeing
+ * clean_up - gracefully exits upon encountering an error by freeing
  * memory that has been allocated and printing an error message
  * @obj: the shared obj handling data that most variables need
  * @message: the message to print
  */
-void get_out(sharedobj_t *obj, const char *message)
+void clean_up(sharedobj_t *obj, const char *message)
 {
 	fprintf(stderr, message, obj->line_num);
 	free_stack(*(obj->current_stack));

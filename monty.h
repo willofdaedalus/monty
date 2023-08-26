@@ -96,7 +96,7 @@ void free_stack(stack_t *stack);
 void init_opcode_check(sharedobj_t *obj);
 void opcode_err_check(sharedobj_t *obj);
 void tokenize_line(char *line, char **words);
-void get_out(sharedobj_t *obj, const char *message);
+void clean_up(sharedobj_t *obj, const char *message);
 void processing_core(sharedobj_t **obj, FILE *file, stack_t **head);
 
 /* HANDLER FUNCTIONS */
