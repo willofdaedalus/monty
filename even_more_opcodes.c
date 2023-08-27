@@ -44,7 +44,7 @@ void pstr(stack_t **stack, unsigned int line_number)
 
 	(void)line_number;
 
-	if (!(*stack))
+	if (stack_len(*stack) == 0)
 		putchar('\n');
 
 	head = *stack;

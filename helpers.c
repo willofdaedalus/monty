@@ -77,7 +77,7 @@ void init_opcode_check(sharedobj_t *obj)
 		i++;
 	}
 
-	/* 
+	/*
 	 * free the memory if the command is not found
 	 * we can't use clean_up because this needs the instruction
 	 * name in order to print
